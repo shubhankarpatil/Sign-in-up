@@ -9,11 +9,6 @@ const passportLocalMongoose = require("passport-local-mongoose"); // PLP package
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 
-// const bcrypt = require("bcrypt");
-// const saltRounds = 10;
-// const encrypt = require("mongoose-encryption");
-// const md5 = require("md5");   //Hashing
-
 const app = express();
 
 app.use(express.static("public"));
@@ -40,7 +35,6 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
-// userSchema.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]});  mongoose-encryption
 
 const User = new mongoose.model("User", userSchema);
 
@@ -151,21 +145,6 @@ app.route("/register")
     } else {
       res.redirect("/register");
     }
-
-    // bcrypt.hash(req.body.password, saltRounds, function(err, hash){
-    //   const newUser = new User({
-    //     email: req.body.username,
-    //     password: hash
-    //   });
-    //
-    //   newUser.save(function(err){
-    //     if(err){
-    //       console.log(err);
-    //     } else {
-    //       res.render("secrets");
-    //     }
-    //   });
-    // });
   });
 
 app.route("/login")
@@ -179,7 +158,6 @@ app.route("/login")
     });
     req.login(user, function(err){
       if(err){
-        // console.log(err);
         if(password !== req.body.password){
           res.write("The entered password or email is wrong. Plese check and try again");
           res.redirect("/login");
@@ -190,28 +168,7 @@ app.route("/login")
         });
       }
     });
-
-
-
-
-    // const userName = req.body.username;
-    // const password = req.body.password;
-    // // const password = md5(req.body.password);
-    //
-    // User.findOne({email: userName}, function(err, foundUser){
-    //   if(err){
-    //     console.log(err);
-    //   } else {
-    //     if(foundUser){
-    //       bcrypt.compare(password, foundUser.password, function(err, result){
-    //         if(result === true){
-    //           res.render("secrets");
-    //         }
-    //       });
-    //     }
-    //   }
-    // })
-  })
+  });
 
 app.listen(3000, function(req, res){
   console.log("The server has started on port 3000");
